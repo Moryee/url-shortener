@@ -1,0 +1,24 @@
+<h1>Short Url Details</h1>
+<form [formGroup]="shortUrlForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="url" class="form-label">Url</label>
+    <input id="url" type="text" formControlName="url" class="form-control" required aria-describedby="validationUrlFeedback">
+    <div *ngIf="shortUrlForm.controls.url.invalid && (shortUrlForm.controls.url.dirty || shortUrlForm.controls.url.touched)" id="validationUrlFeedback" class="text-danger">
+      <div *ngIf="shortUrlForm.controls.url.errors?.['required']">Url is required.</div>
+      <div *ngIf="shortUrlForm.controls.url.errors?.['pattern']">Url must be a valid url.</div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="shortenedUrl" class="form-label">Shortened Url</label>
+    <input id="shortenedUrl" type="text" formControlName="shortenedUrl" class="form-control" required aria-describedby="validationShortenedUrlFeedback">
+    <div *ngIf="shortUrlForm.controls.shortenedUrl.invalid && (shortUrlForm.controls.shortenedUrl.dirty || shortUrlForm.controls.shortenedUrl.touched)" class="text-danger">
+      <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['required']">Shortened Url is required.</div>
+      <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['pattern']">Shortened Url must be a valid url.</div>
+      <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['unique_error']">Shortened Url must be unique.</div>
+    </div>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+    <button [disabled]="!shortUrlForm.valid" type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-danger ml-3" (click)="deleteShortUrl()">Delete</button>
+  </div>
+</form>

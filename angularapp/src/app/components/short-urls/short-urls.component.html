@@ -1,0 +1,25 @@
+<div class="container">
+  <p *ngIf="!shortUrls"><em>Loading...</em></p>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a class="btn btn-outline-primary" routerLink="/short-urls/create">Create Short Path</a>
+  </div>
+  <table *ngIf="shortUrls" class="table">
+      <thead>
+          <tr>
+            <th>Id</th>
+            <th>Url</th>
+            <th>ShortenedUrl</th>
+            <th>UserId</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let url of shortUrls">
+            <td>{{ url.id }}</td>
+            <td>{{ url.url }}</td>
+            <td>{{ url.shortenedUrl }}</td>
+            <td>{{ url.userId }}</td>
+            <td><a class="btn btn-outline-primary" [routerLink]="['/short-urls/detail/', url.id]">Detail</a></td>
+          </tr>
+      </tbody>
+  </table>
+</div>
