@@ -43,7 +43,7 @@ webapi/Controllers/ShortUrlsController.cs
     }
 ```
 
-* Then user can go to his short url by entering https://localhost:4200/shorts/{short url}
+* Then user can go to his short url by entering https://localhost:4200/short/{short url}
 
 ## Authorization
 The implementation of JWT authentication exists only on the backend.

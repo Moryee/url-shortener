@@ -40,24 +40,21 @@ export class ShortUrlsDetailComponent {
     this.shortUrlForm.controls.shortenedUrl.setAsyncValidators(this.createUniqueShortUrlValidator())
   }
 
-  createUniqueShortUrlValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors> => {
+  createUniqueShortUrlValidator() {
+    return (control: AbstractControl) => {
       let value = this.shortUrlForm.controls['shortenedUrl'].value
       if (value && value.length > 0) {
         this.shortUrlsService.getShortUrlByShortUrl(value).subscribe(response => {
           console.log(response);
           if (response) {
             this.shortUrlForm.controls['shortenedUrl'].setErrors({ 'unique_error': 'Short url must be unique' });
-            return
-          }
-          else {
-            return of(Validators.nullValidator)
           }
         });
       }
-      return of(Validators.nullValidator)
+      return of(null);
     }
   }
+
 
   onSubmit(): void {
     let shortUrl = this.getCleanedFormData();

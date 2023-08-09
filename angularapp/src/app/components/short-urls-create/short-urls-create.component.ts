@@ -3,6 +3,7 @@ import { ShortUrlsService } from 'src/app/services/short-urls.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ShortUrlCreate } from 'src/app/models/short-url-create.model';
 import { AsyncValidatorFn, AbstractControl } from '@angular/forms';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-short-urls-create',
@@ -36,6 +37,7 @@ export class ShortUrlsCreateComponent {
           }
         });
       }
+      return of(null);
     }
   }
 
