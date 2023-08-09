@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using webapi.Data;
 using webapi.Identity;
-using webapi.Models;
 using webapi.Models.DTO;
 using webapi.Models.Entities;
 

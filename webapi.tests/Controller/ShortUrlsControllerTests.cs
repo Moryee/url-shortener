@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Azure.Core;
+﻿using AutoMapper;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +6,7 @@ using webapi.Controllers;
 using webapi.Data;
 using webapi.Models.DTO;
 using webapi.Models.Entities;
-using Xunit.Sdk;
+using webapi.Services;
 
 namespace webapi.tests.Controller
 {
@@ -20,11 +14,13 @@ namespace webapi.tests.Controller
     {
         private readonly IShortUrlRepo _repository;
         private readonly IMapper _mapper;
+        private readonly ShortUrlService _service;
 
         public ShortUrlsControllerTests()
         {
             _repository = A.Fake<IShortUrlRepo>();
             _mapper = A.Fake<IMapper>();
+            _service = A.Fake<ShortUrlService>();
         }
 
         [Fact]
@@ -72,9 +68,11 @@ namespace webapi.tests.Controller
             // Arrange
             var shortUrlModel = A.Fake<ShortUrl>();
             var shortUrlCreateDto = A.Fake<ShortUrlCreateDto>();
+            shortUrlCreateDto.ShortenedUrl = "test";
+            var errors = A.Fake<List<string>>();
 
             A.CallTo(() => _mapper.Map<ShortUrl>(shortUrlCreateDto)).Returns(shortUrlModel);
-            A.CallTo(() => _repository.IsShortenedUrlExist(shortUrlModel)).Returns(false);
+            A.CallTo(() => _service.ValidateShortenedUrl(shortUrlCreateDto.ShortenedUrl)).Returns(errors);
             A.CallTo(() => _repository.CreateShortUrl(shortUrlModel)).Returns(Task.CompletedTask);
             A.CallTo(() => _repository.SaveChanges()).Returns(true);
             var controller = new ShortUrlsController(_repository, _mapper);
@@ -94,11 +92,13 @@ namespace webapi.tests.Controller
             var id = Guid.NewGuid();
             var shortUrlModel = A.Fake<ShortUrl>();
             var shortUrlUpdateDto = A.Fake<ShortUrlUpdateDto>();
+            shortUrlUpdateDto.ShortenedUrl = "test";
             var shortUrlReadDto = A.Fake<ShortUrlReadDto>();
+            var errors = A.Fake<List<string>>();
 
             A.CallTo(() => _repository.GetShortUrlById(id)).Returns(shortUrlModel);
             A.CallTo(() => _mapper.Map<ShortUrl>(shortUrlUpdateDto)).Returns(shortUrlModel);
-            A.CallTo(() => _repository.IsShortenedUrlExist(shortUrlModel)).Returns(false);
+            A.CallTo(() => _service.ValidateShortenedUrl(shortUrlUpdateDto.ShortenedUrl)).Returns(errors);
             A.CallTo(() => _mapper.Map(shortUrlUpdateDto, shortUrlModel));
             A.CallTo(() => _repository.SaveChanges()).Returns(true);
             A.CallTo(() => _mapper.Map<ShortUrlReadDto>(shortUrlModel)).Returns(shortUrlReadDto);

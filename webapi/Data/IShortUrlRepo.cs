@@ -11,7 +11,7 @@ namespace webapi.Data
         Task CreateShortUrl(ShortUrl shortUrl);
         Task DeleteShortUrlById(Guid id);
 
-        Task<bool> IsShortenedUrlExist(ShortUrl shortUrl);
+        Task<bool> IsShortenedUrlExist(string shortUrl);
         Task<ShortUrl?> GetShortUrlByShortUrl(string shortUrl);
     }
 }

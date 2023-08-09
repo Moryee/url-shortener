@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 export class ShortUrlsCreateComponent {
   shortUrlForm = this.fb.group({
     url: ['', Validators.required],
-    shortenedUrl: ['', Validators.required],
+    shortenedUrl: ['', Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')])],
     userId: [''],
   });
 

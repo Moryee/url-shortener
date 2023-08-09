@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using webapi.Data;
-using webapi.Identity;
 using webapi.Models.DTO;
 using webapi.Models.Entities;
+using webapi.Services;
 
 namespace webapi.Controllers
 {
@@ -17,11 +13,13 @@ namespace webapi.Controllers
     {
         private readonly IShortUrlRepo _repository;
         private readonly IMapper _mapper;
+        private readonly ShortUrlService _service;
 
         public ShortUrlsController(IShortUrlRepo repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
+            _service = new ShortUrlService(repository);
         }
 
         [HttpGet]
@@ -49,9 +47,10 @@ namespace webapi.Controllers
         {
             var shortUrlModel = _mapper.Map<ShortUrl>(shortUrlCreateDto);
 
-            if (await _repository.IsShortenedUrlExist(shortUrlModel))
+            var errors = await _service.ValidateShortenedUrl(shortUrlCreateDto.ShortenedUrl);
+            if (errors.Capacity > 0)
             {
-                return BadRequest("This short url already exist");
+                return BadRequest(errors);
             }
 
             await _repository.CreateShortUrl(shortUrlModel);
@@ -72,9 +71,10 @@ namespace webapi.Controllers
                 return NotFound();
             }
 
-            if (await _repository.IsShortenedUrlExist(_mapper.Map<ShortUrl>(shortUrlUpdateDto)))
+            var errors = await _service.ValidateShortenedUrl(shortUrlUpdateDto.ShortenedUrl);
+            if (errors.Capacity > 0)
             {
-                return BadRequest("This short url already exist");
+                return BadRequest(errors);
             }
 
             _mapper.Map(shortUrlUpdateDto, shortUrlModel);

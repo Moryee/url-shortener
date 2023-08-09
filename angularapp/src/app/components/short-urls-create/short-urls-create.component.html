@@ -13,7 +13,7 @@
     <input id="shortenedUrl" type="text" formControlName="shortenedUrl" class="form-control" required aria-describedby="validationShortenedUrlFeedback">
     <div *ngIf="shortUrlForm.controls.shortenedUrl.invalid && (shortUrlForm.controls.shortenedUrl.dirty || shortUrlForm.controls.shortenedUrl.touched)" class="text-danger">
       <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['required']">Shortened Url is required.</div>
-      <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['pattern']">Shortened Url must be a valid url.</div>
+      <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['pattern']">Shortened Url must consist only of: lowercase and uppercase letters; numbers.</div>
       <div *ngIf="shortUrlForm.controls.shortenedUrl.errors?.['unique_error']">Shortened Url must be unique.</div>
     </div>
   </div>

@@ -47,9 +47,9 @@ namespace webapi.Data
             return await _context.ShortUrls.Where(x => x.ShortenedUrl == shortUrl).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> IsShortenedUrlExist(ShortUrl shortUrl)
+        public async Task<bool> IsShortenedUrlExist(string shortUrl)
         {
-            var existingShortUrl = await _context.ShortUrls.Where(x => x.ShortenedUrl == shortUrl.ShortenedUrl).FirstOrDefaultAsync();
+            var existingShortUrl = await GetShortUrlByShortUrl(shortUrl);
 
             if (existingShortUrl == null)
             {
