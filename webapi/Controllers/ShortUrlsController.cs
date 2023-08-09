@@ -27,8 +27,8 @@ namespace webapi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllShortUrls()
         {
-            var shortUrls = await _repository.GetAllShortUrls();
-            return Ok(_mapper.Map<IEnumerable<ShortUrlReadDto>>(shortUrls));
+            var shortUrlsModel = await _repository.GetAllShortUrls();
+            return Ok(_mapper.Map<IEnumerable<ShortUrlReadDto>>(shortUrlsModel));
         }
 
         [HttpGet]
@@ -36,10 +36,10 @@ namespace webapi.Controllers
         [ActionName("GetShortUrlById")]
         public async Task<IActionResult> GetShortUrlById([FromRoute] Guid id)
         {
-            var shortUrl = await _repository.GetShortUrlById(id);
-            if (shortUrl != null)
+            var shortUrlModel = await _repository.GetShortUrlById(id);
+            if (shortUrlModel != null)
             {
-                return Ok(_mapper.Map<ShortUrlReadDto>(shortUrl));
+                return Ok(_mapper.Map<ShortUrlReadDto>(shortUrlModel));
             }
             return NotFound();
         }
@@ -65,24 +65,22 @@ namespace webapi.Controllers
         [Route("{id:guid}")]
         public async Task<IActionResult> UpdateShortUrl([FromRoute] Guid id, ShortUrlUpdateDto shortUrlUpdateDto)
         {
-            var shortUrlModel = _mapper.Map<ShortUrl>(shortUrlUpdateDto);
+            var shortUrlModel = await _repository.GetShortUrlById(id);
 
-            var existingShortUrl = await _repository.GetShortUrlById(id);
-
-            if (existingShortUrl == null)
+            if (shortUrlModel == null)
             {
                 return NotFound();
             }
 
-            if (await _repository.IsShortenedUrlExist(shortUrlModel))
+            if (await _repository.IsShortenedUrlExist(_mapper.Map<ShortUrl>(shortUrlUpdateDto)))
             {
                 return BadRequest("This short url already exist");
             }
 
-            _mapper.Map(shortUrlUpdateDto, existingShortUrl);
+            _mapper.Map(shortUrlUpdateDto, shortUrlModel);
             await _repository.SaveChanges();
 
-            var shortUrlReadDto = _mapper.Map<ShortUrlReadDto>(existingShortUrl);
+            var shortUrlReadDto = _mapper.Map<ShortUrlReadDto>(shortUrlModel);
             return Ok(shortUrlReadDto);
         }
 

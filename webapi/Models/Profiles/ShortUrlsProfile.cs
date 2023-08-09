@@ -8,7 +8,6 @@ namespace webapi.Models.Profiles
     {
         public ShortUrlsProfile()
         {
-            // Source -> Dest
             CreateMap<ShortUrl, ShortUrlReadDto>();
             CreateMap<ShortUrlCreateDto, ShortUrl>();
             CreateMap<ShortUrlUpdateDto, ShortUrl>();

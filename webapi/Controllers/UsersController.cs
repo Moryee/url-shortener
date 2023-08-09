@@ -43,14 +43,14 @@ namespace webapi.Controllers
         [Route("Login")]
         public async Task<IActionResult> LoginUser(UserLoginDto userLoginDto)
         {
-            var existingUser = await _repository.GetUserByEmail(userLoginDto.Email);
+            var userModel = await _repository.GetUserByEmail(userLoginDto.Email);
 
-            if (existingUser == null)
+            if (userModel == null)
             {
                 return NotFound();
             }
 
-            if (existingUser.Password != userLoginDto.Password)
+            if (userModel.Password != userLoginDto.Password)
             {
                 return BadRequest("Wrong password");
             }
@@ -66,8 +66,8 @@ namespace webapi.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(IdentityData.SuperUserClaimName, existingUser.IsSuperUser.ToString(), ClaimValueTypes.Boolean),
-                    new Claim(IdentityData.EmailClaimName, existingUser.Email, ClaimValueTypes.String),
+                    new Claim(IdentityData.SuperUserClaimName, userModel.IsSuperUser.ToString(), ClaimValueTypes.Boolean),
+                    new Claim(IdentityData.EmailClaimName, userModel.Email, ClaimValueTypes.String),
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = issuer,
@@ -76,7 +76,6 @@ namespace webapi.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            //return tokenHandler.WriteToken(token);
             var data = new { accessToken = tokenHandler.WriteToken(token) };
             return Ok(data);
         }
@@ -85,9 +84,7 @@ namespace webapi.Controllers
         [Route("Register")]
         public async Task<IActionResult> RegisterUser(UserRegisterDto userRegisterDto)
         {
-            var existingUser = await _repository.GetUserByEmail(userRegisterDto.Email);
-
-            if (existingUser != null)
+            if (await _repository.GetUserByEmail(userRegisterDto.Email) != null)
             {
                 return BadRequest("User with this email already exist");
             }

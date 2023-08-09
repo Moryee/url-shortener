@@ -8,7 +8,6 @@ namespace webapi.Models.Profiles
     {
         public UsersProfile()
         {
-            // Source -> Dest
             CreateMap<User, UserReadDto>();
             CreateMap<UserLoginDto, User>();
             CreateMap<UserRegisterDto, User>();

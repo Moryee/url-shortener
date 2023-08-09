@@ -5,12 +5,14 @@ namespace webapi.Models.DTO
 {
     public class ShortUrlCreateDto
     {
+        [Required]
         public string Url { get; set; }
 
+        [Required]
         public string ShortenedUrl { get; set; }
 
-        [Key]
         [ForeignKey("User")]
+        [Required]
         public string UserId { get; set; }
     }
 }

@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { ShortUrlsService } from 'src/app/services/short-urls.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ShortUrlCreate } from 'src/app/models/short-url-create.model';
-import { AsyncValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { AsyncValidatorFn, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-short-urls-create',
@@ -19,31 +17,25 @@ export class ShortUrlsCreateComponent {
   });
 
   constructor(
-    private route: ActivatedRoute,
     private shortUrlsService: ShortUrlsService,
     private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
-    this.shortUrlForm.controls.shortenedUrl.setAsyncValidators(this.createUniqueShortUrlValidator())
+    this.shortUrlForm.controls.shortenedUrl.setAsyncValidators(this.createUniqueShortUrlValidator() as AsyncValidatorFn)
   }
 
-  createUniqueShortUrlValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors> => {
+  createUniqueShortUrlValidator() {
+    return (control: AbstractControl) => {
       let value = this.shortUrlForm.controls['shortenedUrl'].value
       if (value && value.length > 0) {
         this.shortUrlsService.getShortUrlByShortUrl(value).subscribe(response => {
           console.log(response);
           if (response) {
             this.shortUrlForm.controls['shortenedUrl'].setErrors({ 'unique_error': 'Short url must be unique' });
-            return
-          }
-          else {
-            return of(Validators.nullValidator)
           }
         });
       }
-      return of(Validators.nullValidator)
     }
   }
 

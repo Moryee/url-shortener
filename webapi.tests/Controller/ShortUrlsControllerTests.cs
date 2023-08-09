@@ -96,8 +96,8 @@ namespace webapi.tests.Controller
             var shortUrlUpdateDto = A.Fake<ShortUrlUpdateDto>();
             var shortUrlReadDto = A.Fake<ShortUrlReadDto>();
 
-            A.CallTo(() => _mapper.Map<ShortUrl>(shortUrlUpdateDto)).Returns(shortUrlModel);
             A.CallTo(() => _repository.GetShortUrlById(id)).Returns(shortUrlModel);
+            A.CallTo(() => _mapper.Map<ShortUrl>(shortUrlUpdateDto)).Returns(shortUrlModel);
             A.CallTo(() => _repository.IsShortenedUrlExist(shortUrlModel)).Returns(false);
             A.CallTo(() => _mapper.Map(shortUrlUpdateDto, shortUrlModel));
             A.CallTo(() => _repository.SaveChanges()).Returns(true);
